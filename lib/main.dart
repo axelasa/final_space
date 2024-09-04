@@ -1,7 +1,22 @@
+import 'package:final_space/bloc/characters/get_all_characters_bloc.dart';
+import 'package:final_space/pages/characters.dart';
+import 'package:final_space/pages/episodes.dart';
+import 'package:final_space/pages/locations.dart';
+import 'package:final_space/pages/quotes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/episodes/get_all_episodes_bloc.dart';
+import 'bloc/locations/get_all_locations_bloc.dart';
+import 'bloc/quotes/get_all_quotes_bloc.dart';
+import 'common/bloc_observer.dart';
+import 'di/injection.dart';
+import 'home.dart';
 
 void main() {
+  setUp();
   runApp(const MyApp());
+  Bloc.observer = SimpleBlocObserver();
 }
 
 class MyApp extends StatelessWidget {
@@ -10,28 +25,37 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context)=> getIt<GetAllCharactersBloc>()),
+        BlocProvider(create: (context)=> getIt<GetAllEpisodesBloc>()),
+        BlocProvider(create: (context)=> getIt<GetAllLocationsBloc>()),
+        BlocProvider(create: (context)=> getIt<GetAllQuotesBloc>()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const HomePage(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
